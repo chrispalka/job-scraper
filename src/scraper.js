@@ -15,7 +15,7 @@ const config = {
 };
 
 
-const handler = async function () {
+const handler = async function (event, context) {
   console.log('calling func!');
   let newJobFound = false;
   axios(`https://www.governmentjobs.com/careers/home/index?agency=utah&keyword=${process.env.KEYWORD}`, config)
