@@ -14,7 +14,7 @@ const config = {
 };
 
 
-export async function handler() {
+exports.handler = async function () {
   console.log('calling func!');
   let newJobFound = false;
   return axios(`https://www.governmentjobs.com/careers/home/index?agency=utah&keyword=${process.env.KEYWORD}`, config)
