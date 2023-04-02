@@ -61,6 +61,7 @@ exports.handler = async function () {
     .catch((err) => {
       console.log('error!: ', err)
     })
+  console.log('done')
   return {
     statusCode: 200,
   };
