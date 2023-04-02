@@ -30,7 +30,7 @@ router.get('/job', (req, res) => {
       const $ = cheerio.load(response.data, { xmlMode: false });
       const node = $("a[class='item-details-link']")
       for (let i = 0; i < node.length; i++) {
-        if (node[i].children[0].data.toLowerCase().includes('medical')) {
+        if (node[i].children[0].data.toLowerCase().includes(process.env.KEYWORD)) {
           newJobFound = true;
         }
       }
