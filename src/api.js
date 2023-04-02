@@ -25,7 +25,7 @@ router.get("/", (req, res) => {
 
 router.get('/job', (req, res) => {
   let newJobFound = false;
-  axios(`https://www.governmentjobs.com/careers/home/index?agency=utah&keyword=autopsy`, config)
+  axios(`https://www.governmentjobs.com/careers/home/index?agency=utah&keyword=${process.env.KEYWORD}`, config)
     .then((response) => {
       const $ = cheerio.load(response.data, { xmlMode: false });
       const node = $("a[class='item-details-link']")

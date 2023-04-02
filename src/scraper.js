@@ -8,9 +8,9 @@ process.env.SILENCE_EMPTY_LAMBDA_WARNING = true
 
 const handler = async function () {
   console.log('calling func!');
-  axios('./api/job')
+  axios(process.env.API_REQUEST_URL)
     .then((response) => {
-      console.log('Success')
+      return response;
     })
     .catch((err) => console.log(err));
   return {
@@ -18,5 +18,5 @@ const handler = async function () {
   };
 };
 
-exports.handler = schedule("* * * * *", handler);
+exports.handler = schedule(process.env.TIMEOUT, handler);
 
