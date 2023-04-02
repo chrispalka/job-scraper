@@ -5,11 +5,11 @@ require('dotenv').config()
 
 export const handler = schedule('* * * * *', async (event, context) => {
   console.log('callingg')
-  axios('./api/job')
-    .then((response) => {
-      console.log('Success')
-    })
-    .catch((err) => console.log(err));
+  // axios('./api/job')
+  //   .then((response) => {
+  //     console.log('Success')
+  //   })
+  //   .catch((err) => console.log(err));
 
   return {
     statusCode: 200,
