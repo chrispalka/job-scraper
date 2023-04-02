@@ -19,7 +19,7 @@ exports.handler = async function () {
   let newJobFound = false;
   return axios(`https://www.governmentjobs.com/careers/home/index?agency=utah&keyword=${process.env.KEYWORD}`, config)
     .then((response) => {
-      console.log('received response: ', response)
+      console.log('received response:')
       const $ = load(response.data, { xmlMode: false });
       const node = $("a[class='item-details-link']")
       console.log('beginning loop of response')
