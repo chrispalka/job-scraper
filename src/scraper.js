@@ -10,7 +10,9 @@ const handler = async function () {
   console.log('calling func!');
   axios(process.env.API_REQUEST_URL)
     .then((response) => {
-      return response;
+      return {
+        statusCode: 200,
+      };
     })
     .catch((err) => console.log(err));
   return {

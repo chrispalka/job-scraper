@@ -32,7 +32,9 @@ router.get('/job', (req, res) => {
       for (let i = 0; i < node.length; i++) {
         if (node[i].children[0].data.toLowerCase().includes(process.env.KEYWORD)) {
           newJobFound = true;
-          return;
+        }
+        if (newJobFound) {
+          break;
         }
       }
       if (newJobFound) {
