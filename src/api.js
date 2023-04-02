@@ -32,6 +32,7 @@ router.get('/job', (req, res) => {
       for (let i = 0; i < node.length; i++) {
         if (node[i].children[0].data.toLowerCase().includes(process.env.KEYWORD)) {
           newJobFound = true;
+          return;
         }
       }
       if (newJobFound) {
@@ -51,11 +52,12 @@ router.get('/job', (req, res) => {
           text: 'https://www.governmentjobs.com/careers/home/index?agency=utah'
         };
         transporter.sendMail(mailOptions, (err, response) => {
+          console.log('Sending mail..')
           if (err) {
             console.log(err);
             res.sendStatus(404)
           } else {
-            console.log('Mail Sent!')
+            console.log('Mail Sent! ', response)
             res.sendStatus(200)
           }
         });
