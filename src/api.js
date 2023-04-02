@@ -35,6 +35,7 @@ router.get('/job', (req, res) => {
         }
       }
       if (newJobFound) {
+        console.log('New Job Found!')
         const transporter = nodemailer.createTransport({
           service: 'gmail',
           name: 'www.gmail.com',
@@ -54,6 +55,7 @@ router.get('/job', (req, res) => {
             console.log(err);
             res.sendStatus(404)
           } else {
+            console.log('Mail Sent!')
             res.sendStatus(200)
           }
         });
