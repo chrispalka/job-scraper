@@ -1,7 +1,6 @@
 const axios = require('axios').default;
 const cheerio = require('cheerio');
 const nodemailer = require('nodemailer');
-const { schedule } = require("@netlify/functions");
 
 require('dotenv').config()
 
@@ -20,8 +19,10 @@ exports.handler = async function () {
   let newJobFound = false;
   axios(`https://www.governmentjobs.com/careers/home/index?agency=utah&keyword=${process.env.KEYWORD}`, config)
     .then((response) => {
+      console.log('received response: ', response)
       const $ = cheerio.load(response.data, { xmlMode: false });
       const node = $("a[class='item-details-link']")
+      console.log('beginning loop of response')
       for (let i = 0; i < node.length; i++) {
         if (node[i].children[0].data.toLowerCase().includes(process.env.KEYWORD)) {
           newJobFound = true;
@@ -30,6 +31,7 @@ exports.handler = async function () {
           break;
         }
       }
+      console.log('New Job Found: ', newJobFound)
       if (newJobFound) {
         console.log('New Job Found!')
         const transporter = nodemailer.createTransport({
