@@ -1,6 +1,6 @@
-const axios = require('axios').default;
-const cheerio = require('cheerio');
-const nodemailer = require('nodemailer');
+import axios from 'axios';
+import { load } from 'cheerio';
+import { createTransport } from 'nodemailer';
 
 require('dotenv').config()
 
@@ -14,13 +14,13 @@ const config = {
 };
 
 
-exports.handler = async function () {
+export async function handler() {
   console.log('calling func!');
   let newJobFound = false;
-  axios(`https://www.governmentjobs.com/careers/home/index?agency=utah&keyword=${process.env.KEYWORD}`, config)
+  return axios(`https://www.governmentjobs.com/careers/home/index?agency=utah&keyword=${process.env.KEYWORD}`, config)
     .then((response) => {
       console.log('received response: ', response)
-      const $ = cheerio.load(response.data, { xmlMode: false });
+      const $ = load(response.data, { xmlMode: false });
       const node = $("a[class='item-details-link']")
       console.log('beginning loop of response')
       for (let i = 0; i < node.length; i++) {
@@ -34,7 +34,7 @@ exports.handler = async function () {
       console.log('New Job Found: ', newJobFound)
       if (newJobFound) {
         console.log('New Job Found!')
-        const transporter = nodemailer.createTransport({
+        const transporter = createTransport({
           service: 'gmail',
           name: 'www.gmail.com',
           auth: {
@@ -57,13 +57,16 @@ exports.handler = async function () {
           }
         });
       }
+      console.log('done')
+      return {
+        statusCode: 200
+      }
     })
     .catch((err) => {
       console.log('error!: ', err)
+      return {
+        statusCode: 404
+      }
     })
-  console.log('done')
-  return {
-    statusCode: 200,
-  };
-};
+}
 
