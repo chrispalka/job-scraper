@@ -15,7 +15,7 @@ const config = {
 };
 
 
-const handler = async function (event, context) {
+exports.handler = async function () {
   console.log('calling func!');
   let newJobFound = false;
   axios(`https://www.governmentjobs.com/careers/home/index?agency=utah&keyword=${process.env.KEYWORD}`, config)
@@ -63,6 +63,4 @@ const handler = async function (event, context) {
     statusCode: 200,
   };
 };
-
-exports.handler = schedule(process.env.TIMEOUT, handler);
 
