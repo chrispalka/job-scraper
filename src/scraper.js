@@ -13,16 +13,26 @@ const config = {
   }
 };
 
+function createMailClient() {
+  return createTransport({
+    service: 'gmail',
+    name: 'www.gmail.com',
+    auth: {
+      user: process.env.EMAIL_ADDRESS,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  })
+}
 
-exports.handler = async function () {
-  console.log('calling func!');
+const mailClient = createMailClient();
+
+exports.handler = async () => {
+  console.log('Function Begin');
   let newJobFound = false;
-  return axios(`https://www.governmentjobs.com/careers/home/index?agency=utah&keyword=${process.env.KEYWORD}`, config)
-    .then((response) => {
-      console.log('received response:')
+  axios(`https://www.governmentjobs.com/careers/home/index?agency=utah&keyword=${process.env.KEYWORD}`, config)
+    .then(async (response) => {
       const $ = load(response.data, { xmlMode: false });
       const node = $("a[class='item-details-link']")
-      console.log('beginning loop of response')
       for (let i = 0; i < node.length; i++) {
         if (node[i].children[0].data.toLowerCase().includes(process.env.KEYWORD)) {
           newJobFound = true;
@@ -31,41 +41,27 @@ exports.handler = async function () {
           break;
         }
       }
-      console.log('New Job Found: ', newJobFound)
       if (newJobFound) {
         console.log('New Job Found!')
-        const transporter = createTransport({
-          service: 'gmail',
-          name: 'www.gmail.com',
-          auth: {
-            user: process.env.EMAIL_ADDRESS,
-            pass: process.env.EMAIL_PASSWORD,
-          },
-        });
-        const mailOptions = {
+        console.log('FROM: ', process.env.EMAIL_ADDRESS)
+        console.log('TO: ', process.env.EMAIL_ADDRESS_TO)
+        console.log('BCC: ', process.env.EMAIL_ADDRESS_BCC)
+        await mailClient.sendMail({
           from: process.env.EMAIL_ADDRESS,
           to: process.env.EMAIL_ADDRESS_TO,
+          bcc: process.env.EMAIL_ADDRESS_BCC,
           subject: 'New Autopsy Job posting!',
           text: 'https://www.governmentjobs.com/careers/home/index?agency=utah'
-        };
-        transporter.sendMail(mailOptions, (err, response) => {
-          console.log('Sending mail..')
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('Mail Sent! ', response)
-          }
-        });
+        })
       }
-      console.log('done')
       return {
-        statusCode: 200
+        statusCode: 200,
       }
     })
     .catch((err) => {
       console.log('error!: ', err)
       return {
-        statusCode: 404
+        statusCode: 500
       }
     })
 }
