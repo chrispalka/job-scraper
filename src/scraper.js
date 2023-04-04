@@ -29,7 +29,7 @@ const mailClient = createMailClient();
 exports.handler = async () => {
   console.log('Function Begin');
   let newJobFound = false;
-  axios(`https://www.governmentjobs.com/careers/home/index?agency=utah&keyword=${process.env.KEYWORD}`, config)
+  return axios(`https://www.governmentjobs.com/careers/home/index?agency=utah&keyword=${process.env.KEYWORD}`, config)
     .then(async (response) => {
       const $ = load(response.data, { xmlMode: false });
       const node = $("a[class='item-details-link']")
