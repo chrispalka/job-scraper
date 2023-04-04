@@ -5,4 +5,4 @@
   publish = "dist"
 
 [functions."scraper"]
-  schedule = "* * * * *"
+  schedule = "0 */2 * * *"
