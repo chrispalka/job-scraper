@@ -6,6 +6,8 @@ require('dotenv').config()
 
 process.env.SILENCE_EMPTY_LAMBDA_WARNING = true
 
+const keywordArray = process.env.KEYWORDS.split(', ')
+
 
 const config = {
   headers: {
@@ -23,7 +25,6 @@ function createMailClient() {
     },
   })
 }
-
 const mailClient = createMailClient();
 
 exports.handler = async () => {
@@ -33,8 +34,9 @@ exports.handler = async () => {
     .then(async (response) => {
       const $ = load(response.data, { xmlMode: false });
       const node = $("a[class='item-details-link']")
+      console.log('Keywords:', keywordArray)
       for (let i = 0; i < node.length; i++) {
-        if (node[i].children[0].data.toLowerCase().includes(process.env.KEYWORD)) {
+        if (keywordArray.some((subString) => node[i].children[0].data.toLowerCase().includes(subString))) {
           newJobFound = true;
         }
         if (newJobFound) {
