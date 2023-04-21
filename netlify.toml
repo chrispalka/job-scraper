@@ -3,6 +3,3 @@
 
 [dev]
   publish = "dist"
-
-[functions."scraper"]
-  schedule = "0 */2 * * *"
